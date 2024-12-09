@@ -8,6 +8,9 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+/* Importe el servicio */
+import { ProviderService } from '../services/provider.service';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -17,6 +20,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     IonSelect, IonSelectOption, IonTextarea, IonButton,
     IonList, IonItem, IonLabel, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent]
 })
+
+
 export class Tab2Page {
 
   /* Instancie un formulario */
@@ -25,13 +30,30 @@ export class Tab2Page {
     opinion: new FormControl("", Validators.required)
   });
 
-/* El método onSubmit para enviar los datos del formulario mediante el servicio */
-onSubmit() {
-  console.log(this.myForm.value);
-  alert(this.myForm.controls["score"].value)
-  this.myForm.reset()
-}
+  /* Nombre de la colección */
+  collectionName = 'reviews';
 
-  constructor() { }
+  /* Arreglo con datos locales */
+  dataList: any[] = [];
+
+  constructor(private providerService: ProviderService) { }
+
+  /* El método onSubmit para enviar los datos del formulario mediante el servicio */
+  onSubmit() {
+    this.providerService.createDocument(this.collectionName, this.myForm.value).then(() => {
+      this.myForm.reset()
+    });
+  }
+
+  /* Al inicializar, carga los datos  */
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.providerService.readCollection(this.collectionName).subscribe((data) => {
+      this.dataList = data;
+    });
+  }
 
 }
