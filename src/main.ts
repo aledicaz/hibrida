@@ -7,6 +7,7 @@ import { AppComponent } from './app/app.component';
 
  /* Importe las credenciales */
  import { firebaseConfig } from './credentials';
+ 
 
   /* Importe los módulos de AngularFire */
   import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
